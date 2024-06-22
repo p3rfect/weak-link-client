@@ -4,7 +4,7 @@ import classes from "./PlayerCard.module.css";
 
 function PlayerCard({user, currentPlayer, index, revealed, pollResult, eliminated, ...props}) {
     return (
-        <div {...props} style={{display: "flex", flexDirection: "column", border: currentPlayer == index ? "2px solid green" : "",
+        <div {...props} style={{alignSelf: "center", display: "flex", flexDirection: "column", border: currentPlayer == index ? "2px solid green" : "",
             boxShadow: currentPlayer == index ? "0px 0px 10px 10px rgba(0, 255, 0, .05)" : ""}} className={classes.PlayerCard}>
             <img className={classes.Picture} src={`data:image/png;base64,${user.picture.data}`} alt="avatar"
                  style={{width: props.width, height: props.height}}/>

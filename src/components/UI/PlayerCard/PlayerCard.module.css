@@ -1,5 +1,6 @@
 .PlayerCard{
     box-shadow: 1px 1px 10px 10px rgba(128, 128, 128, .01);
+    width: 17%;
 }
 
 .Username{
@@ -9,7 +10,7 @@
 
 .Picture{
     margin-top: 10px;
-    width: 75%;
+    width: 90%;
     height: 100px;
     align-self: center;
 }
