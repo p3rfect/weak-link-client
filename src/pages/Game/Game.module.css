@@ -1,0 +1,58 @@
+.Wrapper{
+    margin-top: 100px;
+    margin-left: 3%;
+    display: grid;
+    gap: 3%;
+    grid-template-columns: 15% 60% 15%;
+}
+
+.GameCode{
+    grid-column: 1;
+}
+
+.GameMaster{
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.MasterActions{
+    grid-column: 1;
+}
+
+.FirstPlayersRow{
+    grid-column: 2;
+    grid-row: 1;
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+}
+
+.GameInfo{
+    grid-column: 2;
+    grid-row: 2;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+}
+
+.SecondPlayersRow{
+    grid-column: 2;
+    grid-row: 3;
+    height: 200px;
+    display: flex;
+    height: 200px;
+    flex-direction: row;
+}
+
+.GameBank{
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.GameLevels{
+    grid-column: 3;
+    grid-row: 2 / 4;
+}
