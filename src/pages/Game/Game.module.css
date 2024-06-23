@@ -8,30 +8,45 @@
 
 .GameCode{
     grid-column: 1;
+    align-self: center;
 }
 
 .GameMaster{
     grid-column: 1;
     display: flex;
     flex-direction: column;
+    align-self: center;
+    padding-top: 30px;
+    padding-bottom: 20px;
+}
+
+.MasterPicture{
+    width: 75%;
+    align-self: center;
+}
+
+.MasterUsername{
+    align-self: center;
+    margin-top: 20px;
 }
 
 .MasterActions{
     grid-column: 1;
+    align-self: center;
 }
 
 .FirstPlayersRow{
+    align-self: center;
     grid-column: 2;
     grid-row: 1;
-    height: 200px;
     display: flex;
     flex-direction: row;
 }
 
 .GameInfo{
+    align-self: center;
     grid-column: 2;
     grid-row: 2;
-    height: 200px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -39,20 +54,21 @@
 }
 
 .SecondPlayersRow{
+    align-self: center;
     grid-column: 2;
     grid-row: 3;
-    height: 200px;
     display: flex;
-    height: 200px;
     flex-direction: row;
 }
 
 .GameBank{
+    align-self: center;
     grid-column: 3;
     grid-row: 1;
 }
 
 .GameLevels{
+    margin-top: -20px;
     grid-column: 3;
     grid-row: 2 / 4;
 }

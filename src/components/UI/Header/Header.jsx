@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import CssBaseline from "@mui/material/CssBaseline";
-import {AppBar, Button, Dialog, DialogContent, DialogTitle, Typography} from "@mui/material";
+import {AppBar, Avatar, Button, Dialog, DialogContent, DialogTitle, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import classes from "./Header.module.css";
@@ -64,7 +64,7 @@ function Header() {
                     :
                         <div className={classes.AuthContainer}>
                             <Button className={classes.Button} onClick={handleUploadImageButton}>Загрузить картинку профиля</Button>
-                            <img className={classes.UserPic} src={`data:image/png;base64,${user.picture.data}`}/>
+                            <Avatar className={classes.UserPic} src={`data:image/png;base64,${user.picture.data}`}/>
                             <Typography className={classes.Username} variant="h7">{user.username}</Typography>
                             <Button className={classes.Button} onClick={handleLogout}>Выйти</Button>
                         </div>

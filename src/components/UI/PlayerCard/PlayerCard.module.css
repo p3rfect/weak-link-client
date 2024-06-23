@@ -1,22 +1,21 @@
 .PlayerCard{
     box-shadow: 1px 1px 10px 10px rgba(128, 128, 128, .01);
-    width: 17%;
+    width: 15%;
+    margin-left: 2%;
 }
 
 .Username{
-    margin-top: 20px;
+    margin-top: 10px;
     align-self: center;
 }
 
 .Picture{
-    margin-top: 10px;
     width: 90%;
-    height: 100px;
+    aspect-ratio: 10 / 9;
     align-self: center;
 }
 
 .Eliminate{
     align-self: center;
-    display: flex;
-    flex-direction: column;
+    height: 20px;
 }

@@ -8,6 +8,7 @@ import {join_game} from "../../services/GameService";
 import {register_callback} from "../../websocket";
 import {setGame} from "../../features/game/gameSlice";
 import classes from "./Home.module.css";
+import MyForm from "../../components/UI/MyForm/MyForm";
 
 function Home(props) {
     const route = useNavigate()
@@ -56,7 +57,7 @@ function Home(props) {
     })
 
     return (
-        <div>
+        <div className={classes.Wrapper}>
             <Header/>
             <Dialog
                 open={showCodeDialog}
@@ -101,10 +102,10 @@ function Home(props) {
                  text="Для данного действия необходимо войти в аккаунт"/>
             <MyAlert showAlert={showNotFoundAlert} setShowAlert={setShowNotFoundAlert} title="Ошибка"
                  text="Игра не найдена"/>
-            <div className={classes.ButtonContainer}>
-                <Button variant="outlined" onClick={handleCreateGame} className={classes.Button}>Создать игру</Button>
-                <Button variant="outlined" onClick={handleJoinGame} className={classes.Button}>Подключиться к игре</Button>
-            </div>
+            <MyForm style={{width: "30%", alignSelf: "center"}} list={[
+                <Button key="create-button" variant="outlined" onClick={handleCreateGame} className={classes.Button}>Создать игру</Button>,
+                <Button key="join-button" variant="outlined" onClick={handleJoinGame} className={classes.Button}>Подключиться к игре</Button>
+            ]}/>
         </div>
     );
 }

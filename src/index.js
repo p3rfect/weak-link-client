@@ -8,6 +8,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import {Provider} from "react-redux";
 import {persistor, store} from "./store/store";
 import {PersistGate} from "redux-persist/integration/react";
+import { deepmerge } from "@mui/utils";
+import {THEME_ID as MATERIAL_THEME_ID} from '@mui/material/styles';
 
 const darkTheme = createTheme({
     palette: {
@@ -23,13 +25,13 @@ const cache = createCache({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <CacheProvider value={cache}>
-        <ThemeProvider theme={darkTheme}>
-            <Provider store={store}>
-                <PersistGate loading={null} persistor={persistor}>
-                    <CssBaseline/>
-                    <App />
-                </PersistGate>
-            </Provider>
+        <ThemeProvider theme={{[MATERIAL_THEME_ID]: darkTheme}}>
+                <Provider store={store}>
+                    <PersistGate loading={null} persistor={persistor}>
+                        <CssBaseline/>
+                        <App />
+                    </PersistGate>
+                </Provider>
         </ThemeProvider>
     </CacheProvider>
 );

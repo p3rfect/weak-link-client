@@ -2,7 +2,17 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import PlayerCard from "../../components/UI/PlayerCard/PlayerCard";
 import {useDispatch, useSelector} from "react-redux";
 import Header from "../../components/UI/Header/Header";
-import {Button, FormControl, InputLabel, MenuItem, Select, Typography} from "@mui/material";
+import {
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Typography
+} from "@mui/material";
 import MyForm from "../../components/UI/MyForm/MyForm";
 import classes from "./Game.module.css";
 import {
@@ -38,6 +48,7 @@ function Game(props) {
     const [eliminateChoices, setEliminateChoices] = useState([])
     const [eliminationChoice, setEliminationChoice] = useState('')
     const [strongestEliminate, setStrongestEliminate] = useState(true)
+    const [eliminatedPlayer, setEliminatedPlayer] = useState('')
     const dispatch = useDispatch()
     const [timer, setTimer] = useState("00:00");
     const Ref = useRef(null);
@@ -82,6 +93,7 @@ function Game(props) {
         setCurrentPlayer(0)
         setFirstRound(true)
         setStrongestEliminate(false)
+        setEliminatedPlayer('')
         clearTimer(message.round_time)
         dispatch(startRound())
     }, [clearTimer, dispatch, roundNumber])
@@ -157,7 +169,7 @@ function Game(props) {
 
     const handlePlayerEliminated = useCallback((message) => {
         dispatch(eliminatePlayer(message))
-    }, [])
+    }, [dispatch])
 
     const handleChooseEliminate = useCallback((message) => {
         setChooseEliminate(true)
@@ -215,10 +227,11 @@ function Game(props) {
                         ]}/>
                     }
                 </div>
-                <div className={classes.GameMaster}>
+                <Card className={classes.GameMaster}>
                     <Typography variant="h4" style={{alignSelf: "center", marginBottom: "20px"}}>Ведущий:</Typography>
-                    <PlayerCard key="master" index={-1} currentPlayer={game.currentPlayer} user={game.master} width="150px" height="150px"/>
-                </div>
+                    <img className={classes.MasterPicture} src={`data:image/png;base64,${game.master.picture.data}`}/>
+                    <Typography className={classes.MasterUsername} variant="h4">{game.master.username}</Typography>
+                </Card>
                 <div className={classes.MasterActions}>
                     <MyForm list={
                         isGameMaster ?
@@ -231,7 +244,7 @@ function Game(props) {
                                     ?
                                     [<Button style={{width: "75%", height: "50px", marginTop: "10px"}} key="reveal" variant="outlined" onClick={handleRevealButton} disabled={game.eliminationEnded}>Показать голос</Button>,
                                      <Button style={{width: "75%", height: "50px", marginTop: "10px"}} key="start" variant="outlined" onClick={handleRoundStartButton}>Начать игру</Button>,
-                                     <Button style={{width: "75%", height: "50px", marginTop: "10px"}} key="eliminate" variant="outlined" disabled={!game.eliminationEnded || game.eliminated} onClick={handleEliminateButton}>Исключение</Button>]
+                                     <Button style={{width: "75%", height: "50px", marginTop: "10px"}} key="eliminate" variant="outlined" disabled={!game.eliminationEnded || game.eliminatedPlayer != ''} onClick={handleEliminateButton}>Исключение</Button>]
 
                                     :
                                     [<Button style={{width: "75%", height: "50px", marginTop: "10px"}} key="start" variant="outlined" onClick={handleRoundStartButton}>Начать игру</Button>]
@@ -287,8 +300,8 @@ function Game(props) {
                             <div></div>
                     }
                     <Typography variant="h3">
-                        {game.eliminated ?
-                            "Ожидание начала раунда"
+                        {game.eliminatedPlayer != '' ?
+                            `${game.eliminatedPlayer}, вы - самое слабое звено!`
                             :
                             !firstRound
                                 ?

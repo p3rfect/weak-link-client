@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {useFormik} from "formik";
 import Header from "../../components/UI/Header/Header";
 import MyForm from "../../components/UI/MyForm/MyForm";
-import {Button, FormControl, FormHelperText, InputLabel, OutlinedInput} from "@mui/material";
+import {Alert, Button, FormControl, FormHelperText, InputLabel, OutlinedInput, Snackbar} from "@mui/material";
 import {register} from "../../services/AuthService";
 import {register_callback} from "../../websocket";
 import MyAlert from "../../components/UI/MyAlert/MyAlert";
@@ -21,12 +21,15 @@ const validationSchema = yup.object({
         .string('Повторите пароль')
 })
 
-function Register(props) {
+function Register({setSnackBarOpen, ...props}) {
     const route = useNavigate();
     const [showUserExistAlert, setShowUserExistAlert] = useState(false)
 
     const handle_server_response = (message) => {
-        if (message.success === true) route("/login")
+        if (message.success === true) {
+            setSnackBarOpen(true)
+            route("/login")
+        }
         else setShowUserExistAlert(true)
     }
 
@@ -103,7 +106,7 @@ function Register(props) {
                         {formik.touched.repeatedPassword && formik.errors.repeatedPassword}
                     </FormHelperText>
                 </FormControl>,
-                <Button style={{width: "50%", marginTop: "20px", height: "60px", marginBottom: "20px"}} variant="text" type="submit" key="reg-button" onClick={formik.handleSubmit}>Зарегистрироваться</Button>
+                <Button style={{width: "50%", marginTop: "30px", height: "60px"}} variant="text" type="submit" key="reg-button" onClick={formik.handleSubmit}>Зарегистрироваться</Button>
             ]}/>
         </div>
     );

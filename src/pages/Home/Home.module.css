@@ -14,3 +14,13 @@
     height: 50px;
     margin-top: 30px;
 }
+
+.Button:first-child{
+    margin-top: 0px;
+}
+
+.Wrapper{
+    display: flex;
+    flex-direction: column;
+    padding-top: 300px;
+}

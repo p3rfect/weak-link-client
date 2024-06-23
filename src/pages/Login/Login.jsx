@@ -93,7 +93,7 @@ function Login(props) {
                         {formik.touched.password && formik.errors.password}
                     </FormHelperText>
                 </FormControl>,
-                <Button style={{width: "50%", marginTop: "20px", height: "60px", marginBottom: "20px"}} variant="text" type="submit" key="login-button" onClick={formik.handleSubmit}>Войти</Button>
+                <Button style={{width: "50%", marginTop: "30px", height: "60px"}} variant="text" type="submit" key="login-button" onClick={formik.handleSubmit}>Войти</Button>
             ]}/>
         </div>
     );

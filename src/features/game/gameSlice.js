@@ -22,7 +22,7 @@ export const gameSlice = createSlice({
         currentPlayer: 0,
         bank: 0,
         eliminationEnded: true,
-        eliminated: false,
+        eliminatedPlayer: '',
     },
     reducers: {
         setGame: (state, action) => {
@@ -37,7 +37,7 @@ export const gameSlice = createSlice({
             state.currentLevel = 0
             state.userPoll = ''
             state.eliminationEnded = true
-            state.eliminated = false
+            state.eliminatedPlayer = ''
         },
         addPlayer: (state, action) => {
             console.log(state.players)
@@ -74,7 +74,7 @@ export const gameSlice = createSlice({
                 return player
             })
             state.eliminationEnded = false
-            state.eliminated = false
+            state.eliminatedPlayer = ''
             state.currentPlayer = -2
         },
         revealResult: (state, action) => {
@@ -99,7 +99,7 @@ export const gameSlice = createSlice({
                 if (player.username === action.payload.username) player.eliminated = true;
                 return player;
             })
-            state.eliminated = true
+            state.eliminatedPlayer = action.payload.username
         },
         startRound: (state) => {
             state.players = state.players.map((player) => {
@@ -110,7 +110,7 @@ export const gameSlice = createSlice({
             state.currentPlayer = 0
             while (state.players[state.currentPlayer].eliminated) state.currentPlayer = (state.currentPlayer + 1) % state.players.length
             state.currentLevel = 0
-            state.eliminated = false
+            state.eliminatedPlayer = ''
         }
     }
 })
