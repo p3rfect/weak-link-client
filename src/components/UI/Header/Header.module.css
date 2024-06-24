@@ -26,6 +26,7 @@
 
 .LoginContainer{
     width: 13%;
+    max-width: 250px;
     height: 100%;
     display: flex;
     align-items: center;

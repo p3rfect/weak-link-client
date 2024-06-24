@@ -15,10 +15,12 @@ import {useWebSocketContext} from "../../contexts/WebSocketContext/WebSocketCont
 const validationSchema = yup.object({
     username: yup
         .string('Введите имя пользователя')
-        .required('Имя пользователя обязательно'),
+        .required('Имя пользователя обязательно')
+        .max(30, 'Допустима длина до 30 символов'),
     password: yup
         .string('Введите пароль')
         .min(8, 'Пароль должен содержать минимум 8 символов')
+        .max(30, 'Допустима длина до 30 символов')
         .required('Пароль обязателен'),
 })
 
