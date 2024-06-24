@@ -32,8 +32,8 @@ import {
     set_connection,
     start_round, strongest_eliminate
 } from "../../services/GameService";
-import {register_callback} from "../../websocket";
 import Level from "../../components/UI/Level/Level";
+import {useWebSocketContext} from "../../contexts/WebSocketContext/WebSocketContext";
 
 function Game(props) {
     const game = useSelector((state) => state.game)
@@ -53,6 +53,7 @@ function Game(props) {
     const [timer, setTimer] = useState("00:00");
     const Ref = useRef(null);
     const [selectionFinished, setSelectionFinished] = useState(false)
+    const [socket, register_callback, ready] = useWebSocketContext()
 
     const startTimer = (e) => {
         let total = e
@@ -84,7 +85,7 @@ function Game(props) {
 
     const handleAddNewPlayer = useCallback((message) => {
         dispatch(addPlayer(message.user))
-    }, [])
+    }, [dispatch])
 
     const handleRoundStart = useCallback((message) => {
         setGameStarted(true)
@@ -100,28 +101,28 @@ function Game(props) {
 
     const handleAcceptAnswer = useCallback((message) => {
         dispatch(nextMove({answer: message.answer}))
-    }, [])
+    }, [dispatch])
 
     const handleAcceptAnswerResponse = useCallback((message) => {
         handleAcceptAnswer(message)
-    }, [])
+    }, [handleAcceptAnswer])
 
     const handleRightAnswer = useCallback(() => {
-        send_answer(true, game.id)
-    }, [])
+        send_answer(socket, true, game.id)
+    }, [game.id, socket])
 
     const handleWrongAnswer = useCallback(() => {
-        send_answer(false, game.id)
-    }, [])
+        send_answer(socket,false, game.id)
+    }, [game.id, socket])
 
     const handleRoundStartButton = () => {
         setFirstRound(true)
-        start_round(game.id)
+        start_round(socket, game.id)
     }
 
     const handleCommitToBankResponse = useCallback((message) => {
         dispatch(commitToBank())
-    }, [])
+    }, [dispatch])
 
     const handleBankButton = () => {
         commit_to_bank(game.id)
@@ -131,11 +132,11 @@ function Game(props) {
         dispatch(finishRound())
         setSelectionFinished(false)
         setGameStarted(false)
-    }, [])
+    }, [dispatch])
 
     const handleFinishRound = () => {
         setGameStarted(false)
-        if (user.username === game.master.username) finish_round(game.id)
+        if (user.username === game.master.username) finish_round(socket, game.id)
     }
 
     const handleChangeEliminate = (e) => {
@@ -145,25 +146,25 @@ function Game(props) {
     const handleRevealResponse = useCallback((message) => {
         dispatch(revealResult({username: message.username, result: message.result}))
         setSelectionFinished(true)
-    }, [])
+    }, [dispatch])
 
     const handleRevealRequest = useCallback(() => {
-        reveal(game.id, user.username, game.userPoll)
-    }, [game, user])
+        reveal(socket, game.id, user.username, game.userPoll)
+    }, [game.id, game.userPoll, socket, user.username])
 
     const handleRevealButton = () => {
         for (let player of game.players) {
             if (!player.eliminated && !player.revealed) {
-                reveal_request(game.id, player.username)
+                reveal_request(socket, game.id, player.username)
                 break
             }
         }
     }
 
     const handleEliminateButton = () => {
-        if (!strongestEliminate) eliminate(game.id)
+        if (!strongestEliminate) eliminate(socket, game.id)
         else{
-            request_eliminate(game.id)
+            request_eliminate(socket, game.id)
         }
     }
 
@@ -181,9 +182,9 @@ function Game(props) {
     }
 
     const handleRequestEliminate = useCallback((message) => {
-        if (chooseEliminate) strongest_eliminate(game.id, eliminationChoice)
+        if (chooseEliminate) strongest_eliminate(socket, game.id, eliminationChoice)
         setChooseEliminate(false)
-    }, [chooseEliminate, eliminationChoice, game])
+    }, [chooseEliminate, eliminationChoice, game.id, socket])
 
     const handleStrongestEliminate = useCallback((message) => {
         setStrongestEliminate(true)
@@ -203,13 +204,14 @@ function Game(props) {
         register_callback("strongest_player_eliminates", handleStrongestEliminate)
     }, [handleAcceptAnswerResponse, handleAddNewPlayer, handleCommitToBankResponse, handleFinishRoundResponse,
         handleRevealRequest, handleRevealResponse, handleRoundStart, handlePlayerEliminated, handleChooseEliminate,
-        handleRequestEliminate, handleStrongestEliminate])
+        handleRequestEliminate, handleStrongestEliminate, register_callback])
 
     useEffect(() => {
         if (user.username === game.master.username) setIsGameMaster(true)
-        set_connection(user, game.id)
+        set_connection(socket, user, game.id)
         console.log(game)
-    }, [])
+    }, [game, socket, user])
+
     return (
         <div>
             <Header/>

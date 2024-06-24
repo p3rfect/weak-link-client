@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import * as yup from 'yup'
 import {useFormik} from "formik";
 import Header from "../../components/UI/Header/Header";
@@ -6,9 +6,9 @@ import MyForm from "../../components/UI/MyForm/MyForm";
 import {Button, FormControl, FormHelperText, InputLabel, OutlinedInput} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {register_callback} from "../../websocket";
 import {create_game} from "../../services/GameService";
 import {setGame} from "../../features/game/gameSlice"
+import {useWebSocketContext} from "../../contexts/WebSocketContext/WebSocketContext";
 
 const validationSchema = yup.object({
     max_players: yup
@@ -25,12 +25,13 @@ function CreateGame(props) {
     const route = useNavigate()
     const dispatch = useDispatch()
     const user = useSelector((state) => state.user)
+    const [socket, register_callback, ready] = useWebSocketContext()
 
-    const handle_server_response = (message) => {
+    const handle_server_response = useCallback((message) => {
         if (!message.hasOwnProperty("players")) message.players = []
         dispatch(setGame(message))
         route("/game")
-    }
+    }, [dispatch, route])
 
     const formik = useFormik({
         initialValues: {
@@ -50,13 +51,13 @@ function CreateGame(props) {
             return errors
         },
         onSubmit: (values) => {
-            create_game(user, Number(values.max_players), Number(values.initial_round_time), values.levels)
+            create_game(socket, user, Number(values.max_players), Number(values.initial_round_time), values.levels)
         }
     })
 
     useEffect(() => {
         register_callback("create_game", handle_server_response)
-    })
+    }, [register_callback, handle_server_response])
 
     return (
         <div>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import * as yup from 'yup';
 import {useNavigate} from "react-router-dom";
 import {useFormik} from "formik";
@@ -6,8 +6,8 @@ import Header from "../../components/UI/Header/Header";
 import MyForm from "../../components/UI/MyForm/MyForm";
 import {Alert, Button, FormControl, FormHelperText, InputLabel, OutlinedInput, Snackbar} from "@mui/material";
 import {register} from "../../services/AuthService";
-import {register_callback} from "../../websocket";
 import MyAlert from "../../components/UI/MyAlert/MyAlert";
+import {useWebSocketContext} from "../../contexts/WebSocketContext/WebSocketContext";
 
 const validationSchema = yup.object({
     username: yup
@@ -24,14 +24,15 @@ const validationSchema = yup.object({
 function Register({setSnackBarOpen, ...props}) {
     const route = useNavigate();
     const [showUserExistAlert, setShowUserExistAlert] = useState(false)
+    const [socket, register_callback, ready] = useWebSocketContext()
 
-    const handle_server_response = (message) => {
+    const handle_server_response = useCallback((message) => {
         if (message.success === true) {
             setSnackBarOpen(true)
             route("/login")
         }
         else setShowUserExistAlert(true)
-    }
+    }, [route, setSnackBarOpen])
 
     const formik = useFormik({
         initialValues: {
@@ -51,13 +52,13 @@ function Register({setSnackBarOpen, ...props}) {
             return errors
         },
         onSubmit:  (values) => {
-            register(values.username, values.password)
+            register(socket, values.username, values.password)
         }
     })
 
     useEffect(() => {
         register_callback("registration", handle_server_response)
-    }, [])
+    }, [handle_server_response, register_callback])
     return (
         <div>
             <Header/>

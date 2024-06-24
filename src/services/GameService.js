@@ -1,8 +1,7 @@
-import socket from "../websocket/index";
 import {number} from "yup";
 import game from "../pages/Game/Game";
 
-export const create_game = (master, max_players, initial_round_time, levels) => {
+export const create_game = (socket, master, max_players, initial_round_time, levels) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "create_game",
         game: {
@@ -16,7 +15,7 @@ export const create_game = (master, max_players, initial_round_time, levels) => 
     }))
 }
 
-export const join_game = (user, code) => {
+export const join_game = (socket, user, code) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "join_game",
         user: {
@@ -26,7 +25,7 @@ export const join_game = (user, code) => {
     }))
 }
 
-export const set_connection = (user, game_id) => {
+export const set_connection = (socket, user, game_id) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "set_conn",
         username: user.username,
@@ -34,14 +33,14 @@ export const set_connection = (user, game_id) => {
     }))
 }
 
-export const start_round = (game_id) => {
+export const start_round = (socket, game_id) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "start_round",
         game_id: game_id
     }))
 }
 
-export const send_answer = (answer, game_id) => {
+export const send_answer = (socket, answer, game_id) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "answer",
         answer: answer,
@@ -49,21 +48,21 @@ export const send_answer = (answer, game_id) => {
     }))
 }
 
-export const commit_to_bank = (game_id) => {
+export const commit_to_bank = (socket, game_id) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "commit_to_bank",
         game_id: game_id
     }))
 }
 
-export const finish_round = (game_id) => {
+export const finish_round = (socket, game_id) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "finish_round",
         game_id: game_id
     }))
 }
 
-export const reveal_request = (game_id, username) => {
+export const reveal_request = (socket, game_id, username) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "request_poll_result",
         game_id: game_id,
@@ -71,7 +70,7 @@ export const reveal_request = (game_id, username) => {
     }))
 }
 
-export const reveal = (game_id, username, result) => {
+export const reveal = (socket, game_id, username, result) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "reveal_poll_result",
         game_id: game_id,
@@ -80,14 +79,14 @@ export const reveal = (game_id, username, result) => {
     }))
 }
 
-export const eliminate = (game_id) => {
+export const eliminate = (socket, game_id) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "get_players_to_eliminate",
         game_id: game_id
     }))
 }
 
-export const strongest_eliminate = (game_id, username) => {
+export const strongest_eliminate = (socket, game_id, username) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "eliminate",
         game_id: game_id,
@@ -95,7 +94,7 @@ export const strongest_eliminate = (game_id, username) => {
     }))
 }
 
-export const request_eliminate = (game_id) => {
+export const request_eliminate = (socket, game_id) => {
     socket.send(JSON.stringify({
         __MESSAGE__: "request_eliminate",
         game_id: game_id

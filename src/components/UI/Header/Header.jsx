@@ -8,7 +8,7 @@ import {logout, setPicture} from "../../../features/user/userSlice";
 import MyAlert from "../MyAlert/MyAlert";
 import ImageUploader from "../ImageUploader/ImageUploader";
 import {update_user_pic} from "../../../services/AuthService";
-import {register_callback} from "../../../websocket";
+import {useWebSocketContext} from "../../../contexts/WebSocketContext/WebSocketContext";
 
 function Header() {
     const route = useNavigate();
@@ -16,6 +16,7 @@ function Header() {
     const dispatch = useDispatch()
     const [showImageDialog, setShowImageDialog] = useState(false)
     const [imageData, setImageData] = useState('')
+    const [socket, register_callback, ready] = useWebSocketContext()
 
     const handleRedirect = (e) => {
         route("/" + e)
@@ -37,7 +38,7 @@ function Header() {
     const handleSaveImageData = (data) => {
         setImageData(data)
         if (data != '') dispatch(setPicture({picture: {file: '', data: data}}))
-        update_user_pic(user.username, data)
+        update_user_pic(socket, user.username, data)
     }
 
     useEffect(() => {

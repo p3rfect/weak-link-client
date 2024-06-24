@@ -10,6 +10,7 @@ import {persistor, store} from "./store/store";
 import {PersistGate} from "redux-persist/integration/react";
 import { deepmerge } from "@mui/utils";
 import {THEME_ID as MATERIAL_THEME_ID} from '@mui/material/styles';
+import {WebSocketContextProvider} from "./contexts/WebSocketContext/WebSocketContext";
 
 const darkTheme = createTheme({
     palette: {
@@ -27,10 +28,12 @@ root.render(
     <CacheProvider value={cache}>
         <ThemeProvider theme={{[MATERIAL_THEME_ID]: darkTheme}}>
                 <Provider store={store}>
-                    <PersistGate loading={null} persistor={persistor}>
-                        <CssBaseline/>
-                        <App />
-                    </PersistGate>
+                    <WebSocketContextProvider>
+                        <PersistGate loading={null} persistor={persistor}>
+                            <CssBaseline/>
+                            <App />
+                        </PersistGate>
+                    </WebSocketContextProvider>
                 </Provider>
         </ThemeProvider>
     </CacheProvider>

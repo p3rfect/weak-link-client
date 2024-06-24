@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Header from "../../components/UI/Header/Header";
 import * as yup from "yup";
 import {useNavigate} from "react-router-dom";
@@ -7,10 +7,10 @@ import MyForm from "../../components/UI/MyForm/MyForm";
 import {Button, FormControl, FormHelperText, InputLabel, OutlinedInput} from "@mui/material";
 import MyAlert from "../../components/UI/MyAlert/MyAlert";
 import {login} from "../../services/AuthService";
-import {register_callback} from "../../websocket";
 import {useDispatch} from "react-redux";
 import {setUser} from "../../features/user/userSlice";
 import classes from "./Login.module.css"
+import {useWebSocketContext} from "../../contexts/WebSocketContext/WebSocketContext";
 
 const validationSchema = yup.object({
     username: yup
@@ -27,19 +27,20 @@ function Login(props) {
     const route = useNavigate()
     const [showNotFoundError, setShowNotFoundError] = useState(false)
     const dispatch = useDispatch()
+    const [socket, register_callback, ready] = useWebSocketContext()
 
-    const handle_server_response = (message) => {
+    const handle_server_response = useCallback((message) => {
         if (message.success === true){
             message = message.user
             dispatch(setUser({username: message.username, isMaster: message.master, picture: {file: message.picture.file, data: message.picture.data}}))
             route("/")
         }
         else setShowNotFoundError(true)
-    }
+    }, [dispatch, route])
 
     useEffect(() => {
         register_callback("login", handle_server_response)
-    }, [])
+    }, [handle_server_response, register_callback])
 
     const formik = useFormik({
         initialValues: {
@@ -55,7 +56,7 @@ function Login(props) {
             return errors
         },
         onSubmit: async (values) => {
-            login(values.username, values.password)
+            login(socket, values.username, values.password)
         }
     })
 

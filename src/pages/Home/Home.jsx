@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from "@mui/material";
 import {redirect, useNavigate} from "react-router-dom";
 import Header from "../../components/UI/Header/Header";
 import MyAlert from "../../components/UI/MyAlert/MyAlert";
 import {useDispatch, useSelector} from "react-redux";
 import {join_game} from "../../services/GameService";
-import {register_callback} from "../../websocket";
 import {setGame} from "../../features/game/gameSlice";
 import classes from "./Home.module.css";
 import MyForm from "../../components/UI/MyForm/MyForm";
+import {useWebSocketContext} from "../../contexts/WebSocketContext/WebSocketContext";
 
 function Home(props) {
     const route = useNavigate()
@@ -18,6 +18,7 @@ function Home(props) {
     const [showCodeDialog, setShowCodeDialog] = useState(false)
     const user = useSelector((state) => state.user)
     const dispatch = useDispatch()
+    const [socket, register_callback, ready] = useWebSocketContext()
 
     const handleCreateGame = () => {
         if (!user.isAuth) setShowLoginAlert(true)
@@ -27,7 +28,7 @@ function Home(props) {
         }
     }
 
-    const handleJoinGameResponse = (message) => {
+    const handleJoinGameResponse = useCallback((message) => {
         if (message.success === false){
             setShowNotFoundAlert(true)
         }
@@ -35,10 +36,10 @@ function Home(props) {
             dispatch(setGame(message.game))
             route("/game")
         }
-    }
+    }, [dispatch, route])
 
     const handleJoinGameRequest = (code) => {
-        join_game(user, code)
+        join_game(socket, user, code)
     }
 
     const hadleCodeDialogClose = () => {
@@ -54,7 +55,7 @@ function Home(props) {
 
     useEffect(() => {
         register_callback("join_game", handleJoinGameResponse)
-    })
+    }, [handleJoinGameResponse, register_callback])
 
     return (
         <div className={classes.Wrapper}>
